@@ -1,0 +1,44 @@
+.product-filters {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #2c3e50;
+    white-space: nowrap;
+}
+
+.filter-select {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e1e8ed;
+    border-radius: 6px;
+    background: white;
+    font-size: 1rem;
+    min-width: 200px;
+    transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #8B4513;
+}
+
+.filter-select:disabled {
+    background-color: #f8f9fa;
+    opacity: 0.7;
+}
+
+.loading-text {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}

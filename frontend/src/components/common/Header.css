@@ -1,0 +1,268 @@
+.header {
+    background-color: #2c5530;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.header-container {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    /* Ovo će raširiti levo i desno */
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.logo {
+    text-decoration: none;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    /* Manji gap između linkova */
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    opacity: 0.8;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.welcome-text {
+    font-size: 1rem;
+    color: white;
+    white-space: nowrap;
+}
+
+.logout-btn {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    white-space: nowrap;
+    transition: all 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* CART ICON STYLES */
+.cart-icon {
+    position: relative;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.cart-icon svg {
+    color: white;
+}
+
+.cart-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transform: translate(25%, -25%);
+}
+
+/* U Header.css dodaj: */
+.dashboard-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s;
+}
+
+.dashboard-link:hover {
+    opacity: 0.8;
+}
+
+/* components/common/Header.css - DODAJ OVE STILOVE */
+
+.admin-link {
+    color: #ff6b6b;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: rgba(255, 107, 107, 0.1);
+    transition: all 0.3s ease;
+}
+
+.admin-link:hover {
+    background: #ff6b6b;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.admin-link-mobile {
+    display: none;
+    color: #ff6b6b;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: rgba(255, 107, 107, 0.1);
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-link {
+        display: none;
+    }
+
+    .admin-link-mobile {
+        display: inline-block;
+    }
+
+    .welcome-text {
+        display: none;
+    }
+}
+
+.dashboard-link {
+    color: #2c5530;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: rgba(44, 85, 48, 0.1);
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.dashboard-link:hover {
+    background: #2c5530;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-link {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .admin-link-mobile {
+        display: inline-block;
+    }
+}
+
+/* components/common/Header.css - DODAJ OVO */
+.role-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 1px solid;
+}
+
+.role-artisan {
+    background: #e8f5e8;
+    color: #2d5016;
+    border-color: #c8e6c9;
+}
+
+.role-admin {
+    background: #ffeaa7;
+    color: #e17055;
+    border-color: #fdcb6e;
+}
+
+.role-customer {
+    background: #dfe6e9;
+    color: #636e72;
+    border-color: #b2bec3;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dashboard-link {
+    font-weight: 500;
+    color: #8B4513;
+}
+
+.logout-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #c0392b;
+}
+
+.auth-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.login-link {
+    color: #8B4513;
+}
+
+.register-link {
+    background: #8B4513;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
