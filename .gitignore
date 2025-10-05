@@ -58,3 +58,7 @@ htmlcov/
 
 # Stripe
 stripe-secret-key.txt
+node_modules/
+frontend/node_modules/
+*/node_modules/
+*/node_modules/
