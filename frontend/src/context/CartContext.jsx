@@ -1,5 +1,6 @@
-// context/CartContext.jsx
+// context/CartContext.jsx 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { productAPI } from '../services/api';
 
 const CartContext = createContext();
 
@@ -71,16 +72,84 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('luxuryWoodCart', JSON.stringify(cartState));
     }, [cartState]);
 
-    const addItem = (product) => {
-        dispatch({ type: 'ADD_ITEM', payload: product });
+    // FUNKCIJA ZA PROVERU STOCK-A
+    const checkCartItemStock = async (productId, quantity) => {
+        try {
+            const product = await productAPI.getProduct(productId);
+            return product.stock >= quantity;
+        } catch (error) {
+            console.error('Error checking stock:', error);
+            return false;
+        }
+    };
+
+    // VALIDACIJA CELOG CART-A
+    const validateCartStock = async (cartItems) => {
+        try {
+            for (const item of cartItems) {
+                const hasStock = await checkCartItemStock(item.id, item.quantity);
+                if (!hasStock) {
+                    const product = await productAPI.getProduct(item.id);
+                    return {
+                        valid: false,
+                        error: `Not enough stock for ${item.name}. Available: ${product.stock}`
+                    };
+                }
+            }
+            return { valid: true };
+        } catch (error) {
+            return {
+                valid: false,
+                error: 'Error validating stock. Please try again.'
+            };
+        }
+    };
+
+    const addItem = async (product) => {
+        try {
+            // PROVERI STANJE PRE DODAVANJA U KORPU
+            const currentQuantity = getItemQuantity(product.id);
+            const hasStock = await checkCartItemStock(product.id, currentQuantity + 1);
+
+            if (!hasStock) {
+                alert(`Sorry, ${product.name} is out of stock!`);
+                return false;
+            }
+
+            dispatch({ type: 'ADD_ITEM', payload: product });
+            return true;
+
+        } catch (error) {
+            console.error('Error adding item to cart:', error);
+            alert('Error adding item to cart. Please try again.');
+            return false;
+        }
     };
 
     const removeItem = (productId) => {
         dispatch({ type: 'REMOVE_ITEM', payload: productId });
     };
 
-    const updateQuantity = (productId, quantity) => {
-        dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
+    const updateQuantity = async (productId, quantity) => {
+        try {
+            // PROVERI STANJE PRE PROMENE KOLIČINE
+            if (quantity > 0) {
+                const hasStock = await checkCartItemStock(productId, quantity);
+                if (!hasStock) {
+                    const product = await productAPI.getProduct(productId);
+                    alert(`Cannot update quantity. Only ${product.stock} items available for ${product.name}`);
+                    return false;
+                }
+            }
+
+            dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
+            return true;
+
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+            alert('Error updating quantity. Please try again.');
+            return false;
+        }
     };
 
     const clearCart = () => {
@@ -98,7 +167,9 @@ export const CartProvider = ({ children }) => {
         removeItem,
         updateQuantity,
         clearCart,
-        getItemQuantity
+        getItemQuantity,
+        validateCartStock,
+        checkCartItemStock
     };
 
     return (

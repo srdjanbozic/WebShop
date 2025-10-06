@@ -1,4 +1,3 @@
-// pages/Checkout.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -8,7 +7,7 @@ import './Checkout.css';
 
 const Checkout = () => {
     const navigate = useNavigate();
-    const { cartState, clearCart } = useCart();
+    const { cartState, clearCart, validateCartStock } = useCart();
     const { user } = useAuth();
 
     const [loading, setLoading] = useState(false);
@@ -34,6 +33,14 @@ const Checkout = () => {
         setLoading(true);
 
         try {
+            //  PRVO PROVERI STOCK PRE PLAĆANJA
+            const stockValidation = await validateCartStock(cartState.items);
+            if (!stockValidation.valid) {
+                alert(stockValidation.error);
+                setLoading(false);
+                return;
+            }
+
             // 1. Pripremi order podatke za backend
             const orderData = {
                 items: cartState.items.map(item => ({
@@ -58,7 +65,13 @@ const Checkout = () => {
 
         } catch (error) {
             console.error('Checkout error:', error);
-            alert(error.message || 'Payment failed. Please try again.');
+
+            // BOLJA PORUKA ZA STOCK GREŠKE
+            if (error.message.includes('stock') || error.message.includes('Stock')) {
+                alert(`Stock issue: ${error.message}. Please update your cart and try again.`);
+            } else {
+                alert(error.message || 'Payment failed. Please try again.');
+            }
         } finally {
             setLoading(false);
         }
@@ -176,6 +189,11 @@ const Checkout = () => {
                                 </div>
                             </div>
 
+                            {/* STOCK VALIDATION MESSAGE */}
+                            <div className="stock-validation-message">
+                                <p>✅ All items in your cart are available in stock</p>
+                            </div>
+
                             <button
                                 type="submit"
                                 className="pay-now-btn"
@@ -197,6 +215,13 @@ const Checkout = () => {
                                     <div className="item-details">
                                         <h4>{item.name}</h4>
                                         <p>Qty: {item.quantity}</p>
+                                        {/*  STOCK INFO U ORDER SUMMARY */}
+                                        <small className="stock-info">
+                                            {item.stock <= 5 && item.stock > 0 ?
+                                                `Only ${item.stock} left in stock` :
+                                                'In stock'
+                                            }
+                                        </small>
                                     </div>
                                     <div className="item-total">
                                         ${(item.price * item.quantity).toFixed(2)}

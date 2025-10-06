@@ -4,7 +4,7 @@ import ProductCard from '../components/ProductCard';
 import './Home.css';
 
 const Home = () => {
-    // Testni podaci - kasnije ćeš dohvatiti sa backend-a
+
     const featuredProducts = [
         {
             id: 1,

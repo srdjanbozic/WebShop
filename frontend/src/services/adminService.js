@@ -1,4 +1,4 @@
-// services/adminService.js - KORISTI TVOJ API SISTEM
+// services/adminService.js 
 import { makeRequest } from './api';
 
 export const adminService = {

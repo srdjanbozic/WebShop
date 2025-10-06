@@ -173,3 +173,14 @@ class PublicArtisanResponse(BaseModel):
     
     class Config:
         from_attributes = True
+        # Pagination Schemas
+class PaginatedProductResponse(BaseModel):
+    products: List[ProductResponse]
+    total: int
+    page: int
+    total_pages: int
+    has_next: bool
+    has_prev: bool
+    
+    class Config:
+        from_attributes = True

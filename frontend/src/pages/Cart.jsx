@@ -11,7 +11,7 @@ const Cart = () => {
     const { user } = useAuth();
 
     const handleProceedToCheckout = () => {
-        // ✅ PROVERITE DA LI JE KORISNIK ULOGOVAN
+        //  PROVERITE DA LI JE KORISNIK ULOGOVAN
         if (!user) {
             // Preusmeri na login sa return URL-om
             navigate('/login', {

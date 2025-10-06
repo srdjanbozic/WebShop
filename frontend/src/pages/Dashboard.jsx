@@ -31,8 +31,8 @@ const Dashboard = () => {
         );
     }
 
-    // 🔥 RENDERUJ PRAVI DASHBOARD NA OSNOVU ROLE
-    console.log('🎭 Current user role:', user.role);
+    //  RENDERUJ PRAVI DASHBOARD NA OSNOVU ROLE
+    console.log(' Current user role:', user.role);
 
     switch (user.role) {
         case 'artisan':

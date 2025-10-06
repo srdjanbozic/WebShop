@@ -1,4 +1,4 @@
-// pages/OrderSuccess.jsx - UKLONITE ProtectedRoute
+// pages/OrderSuccess.jsx 
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';

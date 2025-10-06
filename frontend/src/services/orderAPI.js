@@ -1,9 +1,9 @@
-// services/orderAPI.js
+// services/orderAPI.js =
 import makeRequest from './api';
 
 export const orderAPI = {
     async createCheckoutSession(orderData) {
-        return makeRequest('/api/v1/create-checkout-session', {
+        return makeRequest('/api/v1/orders/create-checkout-session', {
             method: 'POST',
             body: orderData
         });

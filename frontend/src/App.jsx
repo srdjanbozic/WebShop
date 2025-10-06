@@ -29,7 +29,7 @@ import ArtisanProducts from './pages/artisan/ProductManagement'
 import ArtisanOrders from './pages/artisan/OrderManagement'
 import ArtisanProfile from './pages/artisan/Profile'
 
-// 🔥 NOVO: PUBLIC ARTISAN PROFILE
+// PUBLIC ARTISAN PROFILE
 import ArtisanPublicProfile from './pages/ArtisanPublicProfile'
 
 import Footer from './components/common/Footer'
@@ -48,7 +48,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:id" element={<ProductDetail />} />
-                <Route path="/artisans/:artisanId" element={<ArtisanPublicProfile />} /> {/* 🔥 NOVA RUTA */}
+                <Route path="/artisans/:artisanId" element={<ArtisanPublicProfile />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/cart" element={<Cart />} />
@@ -95,7 +95,7 @@ function App() {
                   }
                 />
 
-                {/* 🔐 ADMIN PROTECTED ROUTES (Admin only) */}
+                {/*  ADMIN PROTECTED ROUTES (Admin only) */}
                 <Route
                   path="/admin"
                   element={
@@ -145,7 +145,7 @@ function App() {
                   }
                 />
 
-                {/* 🎨 ARTISAN PROTECTED ROUTES (Artisan only) */}
+                {/* ARTISAN PROTECTED ROUTES (Artisan only) */}
                 <Route
                   path="/artisan"
                   element={

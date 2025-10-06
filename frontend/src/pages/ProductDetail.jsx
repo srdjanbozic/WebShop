@@ -29,7 +29,7 @@ const ProductDetail = () => {
             if (foundProduct) {
                 setProduct(foundProduct);
 
-                // 🔥 FETCHUJ ARTISAN PODATKE AKO POSTOJI ARTISAN_ID
+                //  FETCHUJ ARTISAN PODATKE AKO POSTOJI ARTISAN_ID
                 if (foundProduct.artisan_id) {
                     await fetchArtisanData(foundProduct.artisan_id);
                 }
@@ -55,7 +55,7 @@ const ProductDetail = () => {
             };
             setProduct(testProduct);
 
-            // 🔥 FETCHUJ ARTISAN I ZA FALLBACK
+            //  FETCHUJ ARTISAN I ZA FALLBACK
             if (testProduct.artisan_id) {
                 await fetchArtisanData(testProduct.artisan_id);
             }
@@ -70,7 +70,7 @@ const ProductDetail = () => {
             setArtisan(artisanData.artisan);
         } catch (artisanError) {
             console.error('Error fetching artisan:', artisanError);
-            // 🔥 FALLBACK ARTISAN DATA
+            //  FALLBACK ARTISAN DATA
             const fallbackArtisans = {
                 25: { id: 25, full_name: "Marko Woodcraft", email: "marko@luxurywood.com" },
                 26: { id: 26, full_name: "Ana Furniture", email: "ana@luxurywood.com" }
@@ -163,7 +163,7 @@ const ProductDetail = () => {
                     <h1 className="product-title">{product.name}</h1>
                     <p className="product-price">${product.price}</p>
 
-                    {/* 🔥 ARTISAN INFO SECTION - SADA SA PRAVIM ARTISAN PODACIMA */}
+                    {/*  ARTISAN INFO SECTION - SADA SA PRAVIM ARTISAN PODACIMA */}
                     {artisan && (
                         <div className="product-artisan-info">
                             <h4>Handcrafted by:</h4>

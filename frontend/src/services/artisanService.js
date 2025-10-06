@@ -1,4 +1,4 @@
-// services/artisanService.js - ISPRAVI SVE PUTANJE
+// services/artisanService.js 
 import { makeRequest } from './api';
 
 export const artisanService = {

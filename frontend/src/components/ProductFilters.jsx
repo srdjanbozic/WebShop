@@ -12,7 +12,7 @@ const ProductFilters = ({ onFilterChange }) => {
 
     const fetchArtisans = async () => {
         try {
-            // Trebaće ti endpoint za sve artifane
+
             const artisansData = await makeRequest('/api/v1/artisans');
             setArtisans(artisansData);
         } catch (error) {

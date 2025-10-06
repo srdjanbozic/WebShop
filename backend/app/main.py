@@ -6,12 +6,10 @@ import stripe
 import os
 from app.config import settings
 from app.database import engine, get_db
-from app.routes import admin
-from app.routes import artisan
 from app import models
 
-# Import routes
-from app.routes import auth, products, orders, custom_orders, customer
+# Import routes - UKLONI webhooks ako ne postoji
+from app.routes import auth, products, orders, custom_orders, customer, admin, artisan
 
 # Create tables
 models.Base.metadata.create_all(bind=engine)
@@ -32,14 +30,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routes
+# Include routes - POPRAVLJENE PUTANJE
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(admin.router, prefix="/api/v1/admin", tags=["admin"])
 app.include_router(artisan.router, prefix="/api/v1/artisan", tags=["artisan"])
-app.include_router(products.router, prefix="/api/v1", tags=["products"])
-app.include_router(orders.router, prefix="/api/v1", tags=["orders"])
-app.include_router(custom_orders.router, prefix="/api/v1", tags=["custom-orders"])
+app.include_router(products.router, prefix="/api/v1/products", tags=["products"])  # 👈 DODAJ /products
+app.include_router(orders.router, prefix="/api/v1/orders", tags=["orders"])        # 👈 DODAJ /orders
+app.include_router(custom_orders.router, prefix="/api/v1/custom-orders", tags=["custom-orders"])
 app.include_router(customer.router, prefix="/api/v1/customer", tags=["customer"])
+
+# UKLONI webhooks ako ne postoji fajl
+# app.include_router(webhooks.router, prefix="/api/v1/webhooks", tags=["webhooks"])
 
 # Health check endpoint
 @app.get("/")
@@ -91,11 +92,11 @@ async def startup_event():
             print(f" Auto-seeding skipped or failed: {e}")
 
 # Stripe webhook endpoint
-@app.post("/api/webhooks/stripe")
+@app.post("/api/v1/webhooks/stripe")
 async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
     payload = await request.body()
     sig_header = request.headers.get('stripe-signature')
-    webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
+    webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET', 'whsec_test_secret')
     
     try:
         event = stripe.Webhook.construct_event(
@@ -126,7 +127,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
                     product.stock = 0
             
             db.commit()
-            print(f" Order {order.id} marked as paid")
+            print(f"✅ Order {order.id} marked as paid and stock updated via webhook")
     
     elif event['type'] == 'payment_intent.payment_failed':
         session = event['data']['object']
@@ -135,7 +136,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
         if order:
             order.payment_status = "failed"
             db.commit()
-            print(f"Payment failed for order {order.id}")
+            print(f"❌ Payment failed for order {order.id}")
     
     return {"status": "success", "event": event['type']}
 

@@ -8,73 +8,84 @@ const Products = () => {
     const [artisans, setArtisans] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalProducts, setTotalProducts] = useState(0);
+    const productsPerPage = 9;
+
     const [filters, setFilters] = useState({
         category: '',
         material: '',
         minPrice: '',
         maxPrice: '',
         search: '',
-        artisan: '' // 🔥 NOVI ARTISAN FILTER
+        artisan: '',
+        sortBy: 'name'
     });
 
     useEffect(() => {
         fetchProducts();
         fetchArtisans();
-    }, []);
+    }, [currentPage, filters]);
 
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const productsData = await productAPI.getProducts();
-            setProducts(productsData);
+
+            const params = {
+                skip: (currentPage - 1) * productsPerPage,
+                limit: productsPerPage,
+                sort_by: filters.sortBy
+            };
+
+            if (filters.category) params.category = filters.category;
+            if (filters.material) params.material = filters.material;
+            if (filters.minPrice) params.min_price = parseFloat(filters.minPrice);
+            if (filters.maxPrice) params.max_price = parseFloat(filters.maxPrice);
+            if (filters.search) params.search = filters.search;
+            if (filters.artisan) params.artisan_id = parseInt(filters.artisan);
+
+            const response = await productAPI.getProducts(params);
+
+            if (response && response.products) {
+                setProducts(response.products);
+                setTotalPages(response.total_pages || 1);
+                setTotalProducts(response.total || response.products.length);
+            } else {
+                setProducts(response || []);
+                setTotalPages(1);
+                setTotalProducts(response?.length || 0);
+            }
+
             setError(null);
         } catch (err) {
             console.error('Error fetching products:', err);
             setError('Failed to load products. Please try again later.');
 
-            // Fallback na testne podatke ako API ne radi
             const testProducts = [
                 {
-                    id: 1,
-                    name: "Oak Dining Table",
-                    description: "Handcrafted solid oak dining table with elegant finish",
-                    price: 899.99,
-                    stock: 5,
-                    category: "dining",
-                    material: "oak",
-                    dimensions: "180x90x75 cm",
+                    id: 1, name: "Oak Dining Table", price: 899.99, stock: 5,
+                    category: "dining", material: "oak", artisan_id: 25,
                     image_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop",
-                    artisan_id: 25, // 🔥 DODAJ ARTISAN ID
-                    artisan: { full_name: "Marko Woodcraft" } // 🔥 DODAJ ARTISAN INFO
+                    artisan: { full_name: "Marko Woodcraft" }
                 },
                 {
-                    id: 2,
-                    name: "Walnut Modern Closet",
-                    description: "Contemporary walnut closet with smart storage",
-                    price: 1299.99,
-                    stock: 3,
-                    category: "bedroom",
-                    material: "walnut",
-                    dimensions: "200x60x220 cm",
+                    id: 2, name: "Walnut Modern Closet", price: 1299.99, stock: 3,
+                    category: "bedroom", material: "walnut", artisan_id: 26,
                     image_url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop",
-                    artisan_id: 26,
                     artisan: { full_name: "Ana Furniture" }
                 },
                 {
-                    id: 3,
-                    name: "Royal Beech Bed",
-                    description: "Luxurious beech wood bed with carved details",
-                    price: 1599.99,
-                    stock: 7,
-                    category: "bedroom",
-                    material: "beech",
-                    dimensions: "160x200x110 cm",
+                    id: 3, name: "Royal Beech Bed", price: 1599.99, stock: 7,
+                    category: "bedroom", material: "beech", artisan_id: 25,
                     image_url: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=300&fit=crop",
-                    artisan_id: 25,
                     artisan: { full_name: "Marko Woodcraft" }
                 }
             ];
             setProducts(testProducts);
+            setTotalPages(1);
+            setTotalProducts(testProducts.length);
         } finally {
             setLoading(false);
         }
@@ -86,7 +97,6 @@ const Products = () => {
             setArtisans(artisansData);
         } catch (error) {
             console.error('Error fetching artisans:', error);
-            // Fallback artisans
             setArtisans([
                 { id: 25, full_name: "Marko Woodcraft" },
                 { id: 26, full_name: "Ana Furniture" }
@@ -100,6 +110,14 @@ const Products = () => {
             ...prev,
             [name]: value
         }));
+        setCurrentPage(1);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            setCurrentPage(1);
+            fetchProducts();
+        }
     };
 
     const clearFilters = () => {
@@ -109,23 +127,30 @@ const Products = () => {
             minPrice: '',
             maxPrice: '',
             search: '',
-            artisan: '' // 🔥 RESETUJ I ARTISAN
+            artisan: '',
+            sortBy: 'name'
         });
+        setCurrentPage(1);
     };
 
-    const filteredProducts = products.filter(product => {
-        const matchesCategory = !filters.category || product.category === filters.category;
-        const matchesMaterial = !filters.material || product.material === filters.material;
-        const matchesMinPrice = !filters.minPrice || product.price >= parseFloat(filters.minPrice);
-        const matchesMaxPrice = !filters.maxPrice || product.price <= parseFloat(filters.maxPrice);
-        const matchesSearch = !filters.search ||
-            product.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-            (product.description && product.description.toLowerCase().includes(filters.search.toLowerCase()));
-        // 🔥 NOVI ARTISAN FILTER
-        const matchesArtisan = !filters.artisan || product.artisan_id === parseInt(filters.artisan);
+    const goToPage = (page) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-        return matchesCategory && matchesMaterial && matchesMinPrice && matchesMaxPrice && matchesSearch && matchesArtisan;
-    });
+    const nextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(prev => prev + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
     const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
     const materials = [...new Set(products.map(p => p.material).filter(Boolean))];
@@ -162,22 +187,37 @@ const Products = () => {
                 <p>Discover handcrafted luxury furniture made from premium materials</p>
                 {error && (
                     <div className="api-warning">
-                        ⚠️ Using demo data - API connection issue
+                        Using demo data - API connection issue
                     </div>
                 )}
             </div>
 
             <div className="products-container">
-                {/* Filters Sidebar */}
                 <div className="filters-sidebar">
                     <div className="filters-header">
-                        <h3>Filters</h3>
+                        <h3>Filters & Sort</h3>
                         <button onClick={clearFilters} className="clear-filters-btn">
                             Clear All
                         </button>
                     </div>
 
-                    {/* Search */}
+                    <div className="filter-group">
+                        <label>Sort By</label>
+                        <select
+                            name="sortBy"
+                            value={filters.sortBy}
+                            onChange={handleFilterChange}
+                            className="filter-select"
+                        >
+                            <option value="name">Name (A-Z)</option>
+                            <option value="name_desc">Name (Z-A)</option>
+                            <option value="price">Price (Low to High)</option>
+                            <option value="price_desc">Price (High to Low)</option>
+                            <option value="newest">Newest First</option>
+                            <option value="stock">In Stock</option>
+                        </select>
+                    </div>
+
                     <div className="filter-group">
                         <label>Search</label>
                         <input
@@ -185,12 +225,12 @@ const Products = () => {
                             name="search"
                             value={filters.search}
                             onChange={handleFilterChange}
+                            onKeyPress={handleKeyPress}
                             placeholder="Search products..."
                             className="search-input"
                         />
                     </div>
 
-                    {/* 🔥 ARTISAN FILTER */}
                     <div className="filter-group">
                         <label>Artisan</label>
                         <select
@@ -208,7 +248,6 @@ const Products = () => {
                         </select>
                     </div>
 
-                    {/* Category Filter */}
                     <div className="filter-group">
                         <label>Category</label>
                         <select
@@ -226,7 +265,6 @@ const Products = () => {
                         </select>
                     </div>
 
-                    {/* Material Filter */}
                     <div className="filter-group">
                         <label>Material</label>
                         <select
@@ -244,7 +282,6 @@ const Products = () => {
                         </select>
                     </div>
 
-                    {/* Price Range */}
                     <div className="filter-group">
                         <label>Price Range</label>
                         <div className="price-inputs">
@@ -269,15 +306,23 @@ const Products = () => {
                     </div>
                 </div>
 
-                {/* Products Grid */}
                 <div className="products-content">
                     <div className="products-info">
-                        <p>Showing {filteredProducts.length} of {products.length} products</p>
+                        <p>Showing {products.length} of {totalProducts} products</p>
+                        <p>Page {currentPage} of {totalPages}</p>
+
                         {filters.artisan && (
                             <p className="filter-active">
                                 Filtered by: {artisans.find(a => a.id === parseInt(filters.artisan))?.full_name}
                             </p>
                         )}
+
+                        {filters.search && (
+                            <p className="filter-active">
+                                Search: "{filters.search}"
+                            </p>
+                        )}
+
                         {products.length === 0 && (
                             <p className="no-products-warning">
                                 No products available. Please check back later.
@@ -285,7 +330,7 @@ const Products = () => {
                         )}
                     </div>
 
-                    {filteredProducts.length === 0 ? (
+                    {products.length === 0 ? (
                         <div className="no-products">
                             <h3>No products found</h3>
                             <p>Try adjusting your filters or search terms</p>
@@ -294,11 +339,45 @@ const Products = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="products-grid">
-                            {filteredProducts.map(product => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
+                        <>
+                            <div className="products-grid">
+                                {products.map(product => (
+                                    <ProductCard key={product.id} product={product} />
+                                ))}
+                            </div>
+
+                            {totalPages > 1 && (
+                                <div className="pagination">
+                                    <button
+                                        onClick={prevPage}
+                                        disabled={currentPage === 1}
+                                        className="pagination-btn"
+                                    >
+                                        Previous
+                                    </button>
+
+                                    <div className="pagination-pages">
+                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                            <button
+                                                key={page}
+                                                onClick={() => goToPage(page)}
+                                                className={`pagination-page ${currentPage === page ? 'active' : ''}`}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        onClick={nextPage}
+                                        disabled={currentPage === totalPages}
+                                        className="pagination-btn"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

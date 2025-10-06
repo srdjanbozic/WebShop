@@ -1,63 +1,60 @@
-// components/ProductCard.jsx - MODIFIKUJ
+// src/components/ProductCard.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
-    const { addItem, getItemQuantity } = useCart();
+    const { addItem } = useCart();
 
-    const handleAddToCart = (e) => {
+    const handleAddToCart = async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        addItem(product);
+
+        const success = await addItem(product);
+        if (success) {
+            console.log(` ${product.name} added to cart`);
+        }
     };
 
-    const quantityInCart = getItemQuantity(product.id);
+    const isOutOfStock = product.stock === 0;
+    const lowStock = product.stock > 0 && product.stock <= 5;
 
     return (
+
         <Link to={`/products/${product.id}`} className="product-card-link">
-            <div className="product-card">
-                <img
-                    src={product.image_url}
-                    alt={product.name}
-                    className="product-image"
-                    onError={(e) => {
-                        console.log(`❌ IMAGE FAILED: ${product.image_url}`);
-                        e.target.src = '/images/placeholder-furniture.jpg';
-                    }}
-                />
-                <div className="product-info">
-                    <h3 className="product-name">{product.name}</h3>
-                    <p className="product-description">{product.description}</p>
-
-                    {/* 🔥 DODAJ ARTISAN LINK OVDE */}
-                    <div className="artisan-info">
-                        <Link
-                            to={`/artisans/${product.artisan_id}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="artisan-link"
-                        >
-                            By: {product.artisan?.full_name || 'Artisan'}
-                        </Link>
-                    </div>
-
-                    <div className="product-details">
-                        <span className="product-price">${product.price}</span>
-                        <span className="product-stock">{product.stock} in stock</span>
-                    </div>
-                    <button
-                        className="add-to-cart-btn"
-                        onClick={handleAddToCart}
-                        disabled={product.stock === 0}
-                    >
-                        {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                    </button>
-                    {quantityInCart > 0 && (
-                        <div className="in-cart-indicator">
-                            {quantityInCart} in cart
-                        </div>
+            <div className={`product-card ${isOutOfStock ? 'out-of-stock' : ''}`}>
+                <div className="product-image">
+                    <img src={product.image_url} alt={product.name} />
+                    {/* STOCK BADGE */}
+                    {isOutOfStock && (
+                        <div className="stock-badge out-of-stock-badge">Out of Stock</div>
+                    )}
+                    {lowStock && !isOutOfStock && (
+                        <div className="stock-badge low-stock-badge">Low Stock</div>
                     )}
                 </div>
+
+                <div className="product-details">
+                    <h3>{product.name}</h3>
+                    <p className="product-description">{product.description}</p>
+                    <div className="product-price">${product.price}</div>
+
+                    {/* STOCK INDICATOR */}
+                    <div className={`stock-indicator ${isOutOfStock ? 'out-of-stock' : lowStock ? 'low-stock' : 'in-stock'}`}>
+                        {isOutOfStock ? 'Out of Stock' :
+                            lowStock ? `Only ${product.stock} left!` :
+                                `${product.stock} in stock`}
+                    </div>
+                </div>
+
+                <button
+                    className={`add-to-cart-btn ${isOutOfStock ? 'disabled' : ''}`}
+                    onClick={handleAddToCart}
+                    disabled={isOutOfStock}
+                >
+                    {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                </button>
             </div>
         </Link>
     );

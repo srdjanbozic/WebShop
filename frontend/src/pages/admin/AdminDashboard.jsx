@@ -1,4 +1,4 @@
-// pages/admin/AdminDashboard.jsx - LEPŠA VERZIJA
+// pages/admin/AdminDashboard.jsx 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';

@@ -24,12 +24,12 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         if (token) {
             try {
-                console.log('🔐 Checking auth with token...');
+                console.log(' Checking auth with token...');
                 const userData = await authAPI.getCurrentUser();
                 setUser(userData);
-                console.log('✅ User authenticated:', userData.email);
+                console.log(' User authenticated:', userData.email);
             } catch (error) {
-                console.error('❌ Auth check failed:', error);
+                console.error(' Auth check failed:', error);
                 localStorage.removeItem('token');
             }
         }
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         try {
             console.log(' Attempting login...');
             const response = await authAPI.login(credentials);
-            console.log('✅Login response:', response);
+            console.log('Login response:', response);
 
             localStorage.setItem('token', response.access_token);
 
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            console.log('👤 Attempting registration...');
+            console.log(' Attempting registration...');
             const response = await authAPI.register(userData);
             console.log(' Registration response:', response);
 
@@ -68,13 +68,13 @@ export const AuthProvider = ({ children }) => {
 
             return response;
         } catch (error) {
-            console.error('❌ Registration failed:', error);
+            console.error(' Registration failed:', error);
             throw new Error(error.message || 'Registration failed');
         }
     };
 
     const logout = () => {
-        console.log('👋 Logging out...');
+        console.log(' Logging out...');
         localStorage.removeItem('token');
         setUser(null);
     };

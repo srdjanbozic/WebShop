@@ -16,7 +16,7 @@ const Login = () => {
     const navigate = useNavigate()
     const location = useLocation()
 
-    // ✅ UZMI REDIRECT URL AKO POSTOJI
+    //  UZMI REDIRECT URL AKO POSTOJI
     const from = location.state?.from || '/'
 
     const handleChange = (e) => {
@@ -33,7 +33,7 @@ const Login = () => {
 
         try {
             await login(formData)
-            // ✅ REDIRECT NA PRETHODNU STRANICU ILI HOME
+            // REDIRECT NA PRETHODNU STRANICU ILI HOME
             navigate(from, { replace: true })
         } catch (err) {
             setError(err.message || 'Login failed')

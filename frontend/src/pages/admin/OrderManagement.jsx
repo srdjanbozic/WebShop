@@ -14,12 +14,12 @@ const OrderManagement = () => {
 
     const fetchOrders = async () => {
         try {
-            console.log('🔄 Fetching orders...');
+            console.log(' Fetching orders...');
             const data = await adminService.getAllOrders();
-            console.log('🛒 Orders data received:', data);
+            console.log(' Orders data received:', data);
             setOrders(data || []);
         } catch (error) {
-            console.error('❌ Error fetching orders:', error);
+            console.error(' Error fetching orders:', error);
             setError(error.message || 'Failed to load orders');
         } finally {
             setLoading(false);
@@ -31,7 +31,7 @@ const OrderManagement = () => {
             await adminService.updateOrderStatus(orderId, newStatus);
             fetchOrders(); // Refresh list
         } catch (error) {
-            console.error('❌ Error updating order status:', error);
+            console.error(' Error updating order status:', error);
             alert('Failed to update order status');
         }
     };

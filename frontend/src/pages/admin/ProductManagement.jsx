@@ -14,12 +14,12 @@ const ProductManagement = () => {
 
     const fetchProducts = async () => {
         try {
-            console.log('🔄 Fetching products...');
+            console.log(' Fetching products...');
             const data = await adminService.getAllProducts();
-            console.log('📦 Products data received:', data);
+            console.log(' Products data received:', data);
             setProducts(data || []);
         } catch (error) {
-            console.error('❌ Error fetching products:', error);
+            console.error(' Error fetching products:', error);
             setError(error.message || 'Failed to load products');
         } finally {
             setLoading(false);
@@ -36,7 +36,7 @@ const ProductManagement = () => {
             await adminService.updateProductStock(productId, newStock);
             fetchProducts(); // Refresh list
         } catch (error) {
-            console.error('❌ Error updating product stock:', error);
+            console.error(' Error updating product stock:', error);
             alert('Failed to update product stock');
         }
     };

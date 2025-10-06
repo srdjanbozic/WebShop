@@ -44,7 +44,7 @@ const Header = () => {
                         <Link to="/">Home</Link>
                         <Link to="/products">Products</Link>
 
-                        {/* 🔥 ROLE-SPECIFIC LINKS */}
+                        {/* ROLE-SPECIFIC LINKS */}
                         {user && user.role === 'artisan' && (
                             <Link to="/artisan/dashboard" className="role-link">My Workshop</Link>
                         )}

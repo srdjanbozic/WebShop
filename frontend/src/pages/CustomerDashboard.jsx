@@ -29,19 +29,19 @@ const CustomerDashboard = () => {
 
             console.log('🔄 Fetching customer dashboard data...');
 
-            // 🔥 KORISTI NOVE CUSTOMER ENDPOINT-E
+            //  KORISTI NOVE CUSTOMER ENDPOINT-E
             const [ordersData, profileData] = await Promise.all([
                 customerAPI.getMyOrders(),
                 customerAPI.getMyProfile()
             ]);
 
-            console.log('✅ Orders data:', ordersData);
-            console.log('✅ Profile data:', profileData);
+            console.log(' Orders data:', ordersData);
+            console.log(' Profile data:', profileData);
 
             setOrders(ordersData || []);
             setProfileData(profileData || {});
 
-            // 🔥 POKUŠAJ ADRESE AKO POSTOJI ENDPOINT
+            //  POKUŠAJ ADRESE AKO POSTOJI ENDPOINT
             try {
                 const addressesData = await customerAPI.getMyAddresses();
                 setAddresses(addressesData || getMockAddresses(profileData?.address || user?.address));
@@ -53,10 +53,10 @@ const CustomerDashboard = () => {
             setMessage('');
 
         } catch (error) {
-            console.error('❌ Error fetching dashboard data:', error);
+            console.error(' Error fetching dashboard data:', error);
             setMessage('Error loading dashboard data. Using demo data.');
 
-            // 🔥 FALLBACK NA MOCK DATA
+            //  FALLBACK NA MOCK DATA
             setOrders(getMockOrders());
             setProfileData(user || {});
             setAddresses(getMockAddresses(user?.address));
@@ -65,7 +65,7 @@ const CustomerDashboard = () => {
         }
     };
 
-    // 🔥 MOCK DATA ZA FALLBACK
+    //  MOCK DATA ZA FALLBACK
     const getMockOrders = () => [
         {
             id: 1,
@@ -151,13 +151,13 @@ const CustomerDashboard = () => {
                 address: formData.get('address')
             };
 
-            console.log('🔄 Updating profile:', profileData);
+            console.log(' Updating profile:', profileData);
 
-            // 🔥 AŽURIRAJ PROFIL
+            // AŽURIRAJ PROFIL
             const updatedProfile = await customerAPI.updateProfile(profileData);
             setProfileData(updatedProfile);
 
-            // 🔥 SINHRONIZUJ ADRESU U ADDRESSES TABU
+            // SINHRONIZUJ ADRESU U ADDRESSES TABU
             if (profileData.address) {
                 setAddresses(prevAddresses =>
                     prevAddresses.map(addr =>
@@ -168,17 +168,17 @@ const CustomerDashboard = () => {
                 );
             }
 
-            setMessage('✅ Profile updated successfully!');
+            setMessage(' Profile updated successfully!');
 
         } catch (error) {
-            console.error('❌ Error updating profile:', error);
-            setMessage('❌ Error updating profile. Please try again.');
+            console.error(' Error updating profile:', error);
+            setMessage(' Error updating profile. Please try again.');
         } finally {
             setSaving(false);
         }
     };
 
-    // 🔥 PASSWORD CHANGE FUNCTIONALITY
+    //  PASSWORD CHANGE FUNCTIONALITY
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -192,7 +192,7 @@ const CustomerDashboard = () => {
                 confirm_password: formData.get('confirm_password')
             };
 
-            // 🔥 PROVERI DA LI SE ŠIFRE POKLAPAJU
+            //  PROVERI DA LI SE ŠIFRE POKLAPAJU
             if (passwordData.new_password !== passwordData.confirm_password) {
                 throw new Error('New passwords do not match');
             }
@@ -203,24 +203,24 @@ const CustomerDashboard = () => {
 
             console.log('🔄 Changing password...');
 
-            // 🔥 POZOVI PASSWORD CHANGE ENDPOINT
+            //  POZOVI PASSWORD CHANGE ENDPOINT
             await authAPI.changePassword({
                 current_password: passwordData.current_password,
                 new_password: passwordData.new_password
             });
 
-            setMessage('✅ Password updated successfully!');
+            setMessage(' Password updated successfully!');
             e.target.reset(); // Reset form
 
         } catch (error) {
-            console.error('❌ Error changing password:', error);
-            setMessage(`❌ ${error.message || 'Error updating password. Please check your current password.'}`);
+            console.error(' Error changing password:', error);
+            setMessage(` ${error.message || 'Error updating password. Please check your current password.'}`);
         } finally {
             setSaving(false);
         }
     };
 
-    // 🔥 ADDRESS MANAGEMENT FUNCTIONS
+    //  ADDRESS MANAGEMENT FUNCTIONS
     const handleEditAddress = (address) => {
         setEditingAddress(address);
     };
@@ -239,12 +239,12 @@ const CustomerDashboard = () => {
                 country: formData.get('country')
             };
 
-            // 🔥 AŽURIRAJ ADRESU U BAZI AKO POSTOJI ENDPOINT
+            //  AŽURIRAJ ADRESU U BAZI AKO POSTOJI ENDPOINT
             if (editingAddress.id) {
                 // await customerAPI.updateAddress(editingAddress.id, addressData);
             }
 
-            // 🔥 AŽURIRAJ LOCAL STATE
+            //  AŽURIRAJ LOCAL STATE
             setAddresses(prev =>
                 prev.map(addr =>
                     addr.id === editingAddress.id
@@ -254,11 +254,11 @@ const CustomerDashboard = () => {
             );
 
             setEditingAddress(null);
-            setMessage('✅ Address updated successfully!');
+            setMessage(' Address updated successfully!');
 
         } catch (error) {
             console.error('Error updating address:', error);
-            setMessage('❌ Error updating address');
+            setMessage(' Error updating address');
         } finally {
             setSaving(false);
         }
@@ -273,10 +273,10 @@ const CustomerDashboard = () => {
             try {
                 // await customerAPI.deleteAddress(addressId);
                 setAddresses(prev => prev.filter(addr => addr.id !== addressId));
-                setMessage('✅ Address deleted successfully!');
+                setMessage(' Address deleted successfully!');
             } catch (error) {
                 console.error('Error deleting address:', error);
-                setMessage('❌ Error deleting address');
+                setMessage(' Error deleting address');
             }
         }
     };
@@ -302,10 +302,10 @@ const CustomerDashboard = () => {
                     type: addr.id === addressId ? 'primary' : 'secondary'
                 }))
             );
-            setMessage('✅ Primary address updated!');
+            setMessage(' Primary address updated!');
         } catch (error) {
             console.error('Error setting primary address:', error);
-            setMessage('❌ Error updating primary address');
+            setMessage(' Error updating primary address');
         }
     };
 
@@ -517,7 +517,7 @@ const CustomerDashboard = () => {
                                     </button>
                                 </form>
 
-                                {/* 🔥 PASSWORD CHANGE SECTION */}
+                                {/*  PASSWORD CHANGE SECTION */}
                                 <div className="password-section">
                                     <h3>Change Password</h3>
                                     <form onSubmit={handlePasswordChange} className="password-form">
@@ -568,7 +568,7 @@ const CustomerDashboard = () => {
                                 <h2>Saved Addresses</h2>
 
                                 {editingAddress ? (
-                                    // 🔥 EDIT ADDRESS FORM
+                                    //  EDIT ADDRESS FORM
                                     <div className="address-edit-form">
                                         <h3>{editingAddress.id ? 'Edit Address' : 'Add New Address'}</h3>
                                         <form onSubmit={handleSaveAddress}>
@@ -637,7 +637,7 @@ const CustomerDashboard = () => {
                                         </form>
                                     </div>
                                 ) : (
-                                    // 🔥 ADDRESSES LIST
+                                    //  ADDRESSES LIST
                                     <div className="addresses-list">
                                         {addresses.map(address => (
                                             <div key={address.id} className="address-card">

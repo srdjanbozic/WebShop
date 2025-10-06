@@ -1,4 +1,4 @@
-// pages/artisan/ArtisanDashboard.jsx - MODIFIKUJ
+// pages/artisan/ArtisanDashboard.jsx 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -79,7 +79,7 @@ const ArtisanDashboard = () => {
                     Role: <span className="role-artisan">Artisan</span>
                 </div>
 
-                {/* 🔥 DODAJ PUBLIC PROFILE LINK */}
+                {/*DODAJ PUBLIC PROFILE LINK */}
                 <div className="public-profile-link">
                     <Link to={`/artisans/${user?.id}`} className="btn btn-outline">
                         👁️ View My Public Profile
@@ -154,7 +154,7 @@ const ArtisanDashboard = () => {
                         </div>
                     </Link>
 
-                    {/* 🔥 DODAJ PUBLIC PROFILE U QUICK ACTIONS */}
+                    {/*DODAJ PUBLIC PROFILE U QUICK ACTIONS */}
                     <Link to={`/artisans/${user?.id}`} className="action-card">
                         <div className="action-icon">👁️</div>
                         <div className="action-content">

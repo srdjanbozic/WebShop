@@ -16,7 +16,7 @@ const ArtisanPublicProfile = () => {
         fetchArtisanData();
     }, [artisanId]);
 
-    // 🔥 FUNKCIJA ZA SLIKE ARTISANA
+    //  FUNKCIJA ZA SLIKE ARTISANA
     const getArtisanImage = (id) => {
         const artisanImages = {
             25: '/images/artisan-marko.jpg',
@@ -25,7 +25,7 @@ const ArtisanPublicProfile = () => {
         return artisanImages[id] || '/images/default-artisan.jpg';
     };
 
-    // 🔥 FUNKCIJA ZA ARTISAN BIO
+    //  FUNKCIJA ZA ARTISAN BIO
     const getArtisanBio = (id, material) => {
         const bios = {
             25: "Master woodcraft artisan with 15+ years of experience specializing in custom oak and walnut furniture. Known for intricate carvings and durable finishes.",
@@ -44,7 +44,7 @@ const ArtisanPublicProfile = () => {
             console.error('Error fetching artisan:', err);
             setError('Artisan not found');
 
-            // 🔥 FALLBACK ARTISAN DATA
+            //  FALLBACK ARTISAN DATA
             const fallbackArtisans = {
                 25: {
                     artisan: {
@@ -106,7 +106,7 @@ const ArtisanPublicProfile = () => {
                         Member since: {new Date(artisan.artisan.joined_date).toLocaleDateString()}
                     </p>
 
-                    {/* 🔥 ARTISAN BIO */}
+                    {/*  ARTISAN BIO */}
                     <div className="artisan-bio">
                         <p>{artisanBio}</p>
                     </div>
@@ -123,7 +123,7 @@ const ArtisanPublicProfile = () => {
                         </span>
                     </div>
 
-                    {/* 🔥 SPECIALIZATION TAGS */}
+                    {/*  SPECIALIZATION TAGS */}
                     <div className="artisan-specializations">
                         {products.length > 0 && (
                             <>
@@ -161,7 +161,7 @@ const ArtisanPublicProfile = () => {
                 )}
             </div>
 
-            {/* 🔥 CONTACT INFO */}
+            {/*  CONTACT INFO */}
             <div className="artisan-contact">
                 <h3>Contact Artisan</h3>
                 <p>Interested in custom work or have questions? Reach out to {artisan.artisan.full_name} directly.</p>

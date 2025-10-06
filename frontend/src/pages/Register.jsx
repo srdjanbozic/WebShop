@@ -51,7 +51,7 @@ const Register = () => {
         }
 
         try {
-            // ✅ Dodajte console.log za debugging
+
             console.log('Registering user:', {
                 ...formData,
                 role: formData.user_type // Proverite da li backend očekuje 'role' ili 'user_type'
@@ -60,7 +60,7 @@ const Register = () => {
             await register(formData);
             navigate('/dashboard');
         } catch (err) {
-            // ✅ ISPRAVLJENO: Prikaži stvarnu grešku
+
             setError(err.message || 'Registration failed. Please try again.');
             console.error('Registration error:', err);
         } finally {

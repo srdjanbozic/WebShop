@@ -1,4 +1,4 @@
-// pages/admin/UserManagement.jsx - AŽURIRANO
+// pages/admin/UserManagement.jsx 
 import React, { useState, useEffect } from 'react';
 import { adminService } from '../../services/adminService';
 import { useAuth } from '../../context/AuthContext';
@@ -16,12 +16,12 @@ const UserManagement = () => {
 
     const fetchUsers = async () => {
         try {
-            console.log('🔄 Fetching users...');
+            console.log(' Fetching users...');
             const data = await adminService.getUsers();
-            console.log('👥 Users data received:', data);
+            console.log(' Users data received:', data);
             setUsers(data || []);
         } catch (error) {
-            console.error('❌ Error fetching users:', error);
+            console.error(' Error fetching users:', error);
             setError(error.message || 'Failed to load users');
         } finally {
             setLoading(false);
@@ -45,7 +45,7 @@ const UserManagement = () => {
             await adminService.updateUserRole(userId, newRole);
             fetchUsers();
         } catch (error) {
-            console.error('❌ Error updating user role:', error);
+            console.error(' Error updating user role:', error);
             alert('Failed to update user role');
         }
     };
@@ -61,7 +61,7 @@ const UserManagement = () => {
             await adminService.updateUserStatus(userId, isActive);
             fetchUsers();
         } catch (error) {
-            console.error('❌ Error updating user status:', error);
+            console.error(' Error updating user status:', error);
             alert('Failed to update user status');
         }
     };
@@ -85,7 +85,7 @@ const UserManagement = () => {
             await adminService.deleteUser(userId);
             fetchUsers();
         } catch (error) {
-            console.error('❌ Error deleting user:', error);
+            console.error(' Error deleting user:', error);
             alert('Failed to delete user');
         }
     };

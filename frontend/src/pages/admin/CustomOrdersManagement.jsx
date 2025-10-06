@@ -49,7 +49,7 @@ const CustomOrdersManagement = () => {
     const updateOrderStatus = async (orderId, newStatus) => {
         try {
             // This would need a new endpoint or use the existing update
-            // For now, we'll just log it
+
             console.log(`Updating order ${orderId} to status: ${newStatus}`);
             alert('Status update functionality to be implemented');
         } catch (error) {
